@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Real Estate Price Prediction</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  
+  </head>
+  <body>
+    <div class="container">
+      <h1>Real Estate Price Prediction</h1>
+      <form id="prediction-form">
+        <!-- Replace with actual feature names from the dataset -->
+        <div class="form-group">
+          <label for="feature1">Year and Month:</label>
+          <input type="text" name="feature1" id="feature1" placeholder="Eg:2012.25= March 2012" required />
+        </div>
+        <div class="form-group">
+          <label for="feature2">Age of House:</label>
+          <input type="text" name="feature2" id="feature2" placeholder="Eg:10" required />
+        </div>
+        <div class="form-group">
+          <label for="feature3">Distance to nearest MRT Station:</label>
+          <input type="text" name="feature3" id="feature3" placeholder="Eg:84.878" required />
+        </div>
+        <div class="form-group">
+          <label for="feature4">Number of convenience stores:</label>
+          <input type="text" name="feature4" id="feature4" required />
+        </div>
+        <div class="form-group">
+          <label for="feature5">Latitude:</label>
+          <input type="text" name="feature5" id="feature5" required />
+        </div>
+        <div class="form-group">
+          <label for="feature6">Longitude:</label>
+          <input type="text" name="feature6" id="feature6" required />
+        </div>
+        <!-- Add additional features as needed -->
+        <button type="submit">Predict</button>
+      </form>
+      <div id="result"></div>
+    </div>
+
+    <script>
+      const form = document.getElementById("prediction-form");
+      const resultDiv = document.getElementById("result");
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const formData = new FormData(form);
+
+        const response = await fetch("/predict", {
+          method: "POST",
+          body: formData,
+        });
+
+        const data = await response.json();
+        if (data.success) {
+          console.log(data);
+          
+          resultDiv.innerHTML = `<h2>Prediction Results</h2>
+            <p><strong>Price (NTD):</strong> ${data.price}</p>
+            <p><strong>Price (INR):</strong> ${data.price*2.5}</p>`;
+        } else {
+          resultDiv.innerHTML = `<p>Error: ${data.error}</p>`;
+        }
+      });
+    </script>
+  </body>
+</html>
